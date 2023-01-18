@@ -1,5 +1,7 @@
 # Pickle Rick
 
+![Logo Pickle Rick](https://i.imgur.com/o9pyhyU.jpeg)
+
 #### 1. What is the first ingredient Rick needs?
 
 ```
